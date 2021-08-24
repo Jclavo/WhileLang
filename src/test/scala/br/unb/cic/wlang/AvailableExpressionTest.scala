@@ -18,10 +18,7 @@ class AvailableExpressionTest extends AnyFunSuite {
   
   val p = WhileProgram(Sequence(s1, Sequence(s2, Sequence(s3, Sequence(s4, s5)))))
 
-//   While(Condition(GT(Var("y"), Add(Var("a"), Var("b")))), s2)
-
-
-  test("factorial-xx") {
+  test("my-test-1") {
     val (in, out) = AvailableExpression.execute(p)
 
     assert(in(1) == Set.empty)
