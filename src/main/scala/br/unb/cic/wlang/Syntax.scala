@@ -31,7 +31,7 @@ object WhileProgram {
     case Eq(left, right) =>  nonTrivialExpression(left) union nonTrivialExpression(right)
   }
 
-  def labels(program: WhileProgram): Set[Label] = labels(program.stmt)
+  def labels(program: WhileProgram): Set[Label] = collection.immutable.SortedSet[Int]() ++ labels(program.stmt)
 
   private def labels(stmt: Stmt): Set[Label] = stmt match {
     case Assignment(_, _, label) => Set(label)
