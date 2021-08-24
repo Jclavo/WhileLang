@@ -4,7 +4,7 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class CFGBuilderBuilderTest extends AnyFunSuite {
 
-  test("Test simple CFG") {
+  test("simple-CFG") {
     val stmt = Assignment("x", Const(4), 1)
     val program = WhileProgram(stmt)
 
@@ -15,7 +15,7 @@ class CFGBuilderBuilderTest extends AnyFunSuite {
     assert(expected == g)
   }
 
-  test("Test factorial CFG") {
+  test("factorial-CFG") {
     val d1 = Assignment("y", Var("x"), 1)
     val d2 = Assignment("z", Const(1), 2)
     val d3 = Assignment("z", Mult(Var("z"), Var("y")), 4)
@@ -34,6 +34,25 @@ class CFGBuilderBuilderTest extends AnyFunSuite {
          ,(4, 5)
          ,(5, 3)
          ,(3, 6))
+
+    assert(expected == g)
+  }
+
+  test("power-CFG") {
+    val d1 = Assignment("z", Const(1), 1)
+    val d2 = Assignment("z", Mult(Var("z"), Var("y")), 3)
+    val d3 = Assignment("x", Sub(Var("x"), Const(1)), 4)
+    val w1 = While(Condition(GT(Var("x"), Const(0)), 2), Sequence(d2, d3))
+
+    val p = WhileProgram(Sequence(d1,w1))
+
+    val g = CFGBuilder.flow(p)
+
+    val expected: Set[(Int, Int)] =
+      Set((1, 2)
+         ,(2, 3)
+         ,(3, 4)
+         ,(4, 2))
 
     assert(expected == g)
   }
