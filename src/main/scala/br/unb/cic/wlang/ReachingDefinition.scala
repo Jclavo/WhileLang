@@ -26,6 +26,7 @@ object ReachingDefinition {
     // avoids infinite loops.
     val entry: mutable.HashMap[Int, Abstraction] = mutable.HashMap()
     val exit: mutable.HashMap[Int, Abstraction] = mutable.HashMap()
+    val titlesTable = Seq("label","Entry","Kill","Gen","Exit")
 
     // we need to initialize exit..., since we have
     // to first compute entry[l] from exit[l]. after
@@ -34,7 +35,12 @@ object ReachingDefinition {
       exit(label) = bottom
     }
 
+    var iteration = 1
     do {
+      var table = Seq(titlesTable)
+      println(s"\n>> iteration: ${iteration}")
+      iteration += 1 
+      
       val entryOld = entry.clone()
       val exitOld = exit.clone()
 
@@ -53,8 +59,13 @@ object ReachingDefinition {
             res
           }
         val b = block(label, program)  // block with a given label *label*
-        exit(label) = (entry(label) diff kill(b.get, program)) union gen(b.get)
+        val kills = kill(b.get, program)
+        val gens = gen(b.get)
+        exit(label) = (entry(label) diff kills) union gens
+
+        table = table :+ Seq(label.toString,entry(label).mkString(" "),kills.mkString(" "),gens.mkString(" "),exit(label).mkString(" "))
       }
+      println(UtilFormatTable.run(table))
       fixed = (entryOld, exitOld) == (entry, exit)
     }
     while(! fixed)
