@@ -104,6 +104,23 @@ object WhileProgram {
     case IfThenElse(_, s1, s2) => assignments(s1) union assignments(s2)
     case While(_, s) => assignments(s)
   }
+
+  /**
+  * Check if a var is used in an expression
+  */
+  def expHasVariable(name: String, exp: Exp): Boolean = exp match{
+    case Var(n) => n == name
+
+    case Add(left, right) => expHasVariable(name, left) || expHasVariable(name, right)
+    case Sub(left, right) => expHasVariable(name, left) || expHasVariable(name, right)
+    case Mult(left, right) => expHasVariable(name, left) || expHasVariable(name, right) 
+    case And(left, right) => expHasVariable(name, left) || expHasVariable(name, right) 
+    case Or(left, right) => expHasVariable(name, left) || expHasVariable(name, right) 
+    case GT(left, right) => expHasVariable(name, left) || expHasVariable(name, right)
+    case Eq(left, right) => expHasVariable(name, left) || expHasVariable(name, right)
+
+    case _ => false
+  }
 }
 
 /* The abstract classes
