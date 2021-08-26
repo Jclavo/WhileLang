@@ -10,7 +10,7 @@ import WhileProgram.{Label, labels, block, finalLabels, fv, assignments, nonTriv
  */
 object LiveVariable {
 
-  type Abstraction = Set[(String)]
+  type Abstraction = Set[(VarExp)]
   type DS = mutable.HashMap[Int, Abstraction]
 
   val bottom: Abstraction = Set.empty
@@ -77,17 +77,18 @@ object LiveVariable {
   }
 
   /* kill definition according to Table 2.3 of the ppl book */
-  def kill(block: Block, program: WhileProgram): Set[String] = block match {
-    case Assignment(v, exp, _) =>  Set(v)
+  def kill(block: Block, program: WhileProgram): Set[VarExp] = block match {
+    case Assignment(v, exp, _) =>  Set(Var(v))
     case Skip(_) => Set.empty
     case Condition(_, _) => Set.empty
   }
 
   /* gen definition according to Table 2.3 of the PPL book */
-  def gen(block: Block): Set[String] = block match {
-    case Assignment(v, exp, _) => fv(block)
+  def gen(block: Block): Set[VarExp] = block match {
+    case Assignment(v, exp, _) => for { x <- fv(exp) } yield { Var(x) }
     case Skip(_) => Set.empty
-    case Condition(exp, _) => fv(exp)
+    case Condition(exp, _) => for { x <- fv(exp) } yield { Var(x) }
+    // fv(exp).filter(x => Var(x))
   }
 
 }

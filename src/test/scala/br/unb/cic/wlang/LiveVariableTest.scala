@@ -26,41 +26,41 @@ class LiveVariableTest extends AnyFunSuite {
     assert(in(1) ==  Set.empty)
     assert(out(1) ==  Set.empty)
 
-    // assert(in(2) == Set.empty)
-    // assert(out(2) == Var("y"))
-
-    // assert(in(3) == Var("y"))
-    // assert(out(3) ==  (Var("x"),Var("y")))
-  
-    // assert(in(4) == (Var("x"),Var("y")))
-    // assert(out(4) == Var("y"))
-
-    // assert(in(5) ==  Var("y"))
-    // assert(out(5) == Var("z"))
-
-    // assert(in(6) ==  Var("y"))
-    // assert(out(6) == Var("z"))
-
-    // assert(in(7) == Var("z"))
-    // assert(out(7) == Set.empty)
-
     assert(in(2) == Set.empty)
-    assert(out(2) == Set("y"))
+    assert(out(2) == Set(Var("y")))
 
-    assert(in(3) == Set("y"))
-    assert(out(3) ==  Set("x","y"))
+    assert(in(3) == Set(Var("y")))
+    assert(out(3) ==  Set(Var("x"),Var("y")))
   
-    assert(in(4) == Set("x","y"))
-    assert(out(4) == Set("y"))
+    assert(in(4) == Set(Var("x"),Var("y")))
+    assert(out(4) == Set(Var("y")))
 
-    assert(in(5) ==  Set("y"))
-    assert(out(5) == Set("z"))
+    assert(in(5) ==  Set(Var("y")))
+    assert(out(5) == Set(Var("z")))
 
-    assert(in(6) ==  Set("y"))
-    assert(out(6) == Set("z"))
+    assert(in(6) ==  Set(Var("y")))
+    assert(out(6) == Set(Var("z")))
 
-    assert(in(7) == Set("z"))
+    assert(in(7) == Set(Var("z")))
     assert(out(7) == Set.empty)
+
+    // assert(in(2) == Set.empty)
+    // assert(out(2) == Set("y"))
+
+    // assert(in(3) == Set("y"))
+    // assert(out(3) ==  Set("x","y"))
+  
+    // assert(in(4) == Set("x","y"))
+    // assert(out(4) == Set("y"))
+
+    // assert(in(5) ==  Set("y"))
+    // assert(out(5) == Set("z"))
+
+    // assert(in(6) ==  Set("y"))
+    // assert(out(6) == Set("z"))
+
+    // assert(in(7) == Set("z"))
+    // assert(out(7) == Set.empty)
 
     
   }
