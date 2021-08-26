@@ -95,6 +95,14 @@ object WhileProgram {
     case Mult(l, r) => fv(l) union fv(r)
   }
 
+  def fv(exp: BExp): Set[String] = exp match {
+    case Not(exp) => fv(exp)
+    case And(l, r) => fv(l) union fv(r)
+    case Or(l, r) => fv(l) union fv(r)
+    case Eq(l, r) => fv(l) union fv(r)
+    case GT(l, r) => fv(l) union fv(r)
+  }
+
   def assignments(program: WhileProgram): Set[(String, Label)] = assignments(program.stmt)
 
   private def assignments(stmt: Stmt): Set[(String, Label)] = stmt match {
