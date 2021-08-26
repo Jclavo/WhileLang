@@ -140,9 +140,10 @@ object WhileProgram {
 abstract class Exp
 abstract class AExp extends Exp
 abstract class BExp extends Exp
+abstract class VarExp extends AExp
 
 /* Concrete implementations of AExp */
-case class Var(name: String) extends AExp                // variables
+case class Var(name: String) extends VarExp                // variables
 case class Const(value: Int) extends AExp                // integer constants
 case class Add(left: AExp, right: AExp) extends AExp     // Add arithmetic operation
 case class Sub(left: AExp, right: AExp) extends AExp     // Sub arithmetic operation
