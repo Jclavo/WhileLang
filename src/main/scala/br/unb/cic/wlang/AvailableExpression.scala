@@ -40,7 +40,7 @@ object AvailableExpression {
     var iteration = 1
     do {
       var table = Seq(titlesTable)
-      println(s"\n>> iteration: ${iteration}")
+      //println(s"\n>> iteration: ${iteration}")
       
       val entryOld = entry.clone()
       val exitOld = exit.clone()
@@ -67,7 +67,7 @@ object AvailableExpression {
 
         table = table :+ Seq(label.toString,entry(label).mkString(" "),kills.mkString(" "),gens.mkString(" "),exit(label).mkString(" "))
       }
-      println(UtilFormatTable.run(table))
+      //println(UtilFormatTable.run(table))
       iteration += 1 
       fixed = (entryOld, exitOld) == (entry, exit)
     }
