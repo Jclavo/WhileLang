@@ -13,7 +13,7 @@ object AvailableExpression {
   type Abstraction = Set[(Exp)]
   type DS = mutable.HashMap[Int, Abstraction]
 
-  val bottom: Abstraction = Set.empty
+  var bottom: Abstraction = Set.empty
 
   val undef = -1   // this is the equivalent to the undef label in the book (?)
 
@@ -22,7 +22,8 @@ object AvailableExpression {
 
   def execute(program: WhileProgram): (DS, DS) = {
     var fixed = false
-
+    bottom = nonTrivialExpression(program)
+    
     // writing entry and exits as functions would be a possible
     // solution. nonetheless, since one depends on each other,
     // and the CFG might include cycles, a table-based implementation
@@ -46,15 +47,14 @@ object AvailableExpression {
       for(label <- labels(program)) {
         entry(label) =
           if (label == initLabel(program.stmt))
-            bottom
+            Set.empty
           else {
             // U { exit(from) | (from, to) <- flow(program) and to == label}
             // we could have implemented this using foldl, though I hope this
             // solution here is easier to understand.
             var res = bottom
             for((from, to) <- flow(program) if to == label) {
-              if(res == bottom) res = exit(from)
-              else if (exit(from) != bottom && res != bottom) res = exit(from) intersect res
+              res = exit(from) intersect res
             }
             res
           }
@@ -75,7 +75,7 @@ object AvailableExpression {
 
   /* kill definition according to Table 2.1 of the ppl book */
   def kill(block: Block, program: WhileProgram): Set[Exp] = block match {
-    case Assignment(v, exp, _) =>  findExpUsingVar(v, nonTrivialExpression(exp)) union nonTrivialExpression(exp).filter(e =>  expHasVariable(v,exp))
+    case Assignment(v, exp, _) =>  nonTrivialExpression(program).filter(e =>  expHasVariable(v,exp))
     case Skip(_) => Set.empty
     case Condition(_, _) => Set.empty
   }
@@ -87,14 +87,4 @@ object AvailableExpression {
     case Condition(exp, _) => nonTrivialExpression(exp)
   }
 
-  /* search for exp that use v(var) in HashMap "Exit" */
-  def findExpUsingVar(v: String, exp: Set[Exp]): Set[Exp] =  {  
-
-    var used : Set[Exp] = Set.empty
-
-    for((key, value) <- exit){
-      used = used union (for { exp <- value; if (expHasVariable(v,exp)) } yield { exp })
-    }
-    used     
-  }
 }
