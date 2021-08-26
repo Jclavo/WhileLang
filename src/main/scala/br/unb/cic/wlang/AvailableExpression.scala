@@ -54,8 +54,6 @@ object AvailableExpression {
             // solution here is easier to understand.
             var res = bottom
             for((from, to) <- flow(program) if to == label) {
-              // if(res == bottom) res = exit(from)
-              // else if (exit(from) != bottom && res != bottom) res = exit(from) intersect res
               res = exit(from) intersect res
             }
             res
@@ -77,7 +75,8 @@ object AvailableExpression {
 
   /* kill definition according to Table 2.1 of the ppl book */
   def kill(block: Block, program: WhileProgram): Set[Exp] = block match {
-    case Assignment(v, exp, _) =>  findExpUsingVar(v, nonTrivialExpression(exp)) union nonTrivialExpression(exp).filter(e =>  expHasVariable(v,exp))
+    case Assignment(v, exp, _) =>  nonTrivialExpression(program).filter(e =>  expHasVariable(v,exp))
+    
     case Skip(_) => Set.empty
     case Condition(_, _) => Set.empty
   }
@@ -89,14 +88,4 @@ object AvailableExpression {
     case Condition(exp, _) => nonTrivialExpression(exp)
   }
 
-  /* search for exp that use v(var) in HashMap "Exit" */
-  def findExpUsingVar(v: String, exp: Set[Exp]): Set[Exp] =  {  
-
-    var used : Set[Exp] = Set.empty
-
-    for((key, value) <- exit){
-      used = used union (for { exp <- value; if (expHasVariable(v,exp)) } yield { exp })
-    }
-    used     
-  }
 }
