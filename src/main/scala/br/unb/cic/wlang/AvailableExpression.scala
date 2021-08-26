@@ -13,7 +13,7 @@ object AvailableExpression {
   type Abstraction = Set[(Exp)]
   type DS = mutable.HashMap[Int, Abstraction]
 
-  val bottom: Abstraction = Set.empty
+  var bottom: Abstraction = Set.empty
 
   val undef = -1   // this is the equivalent to the undef label in the book (?)
 
@@ -22,6 +22,7 @@ object AvailableExpression {
 
   def execute(program: WhileProgram): (DS, DS) = {
     var fixed = false
+    bottom = nonTrivialExpression(program)
 
     // writing entry and exits as functions would be a possible
     // solution. nonetheless, since one depends on each other,
@@ -39,22 +40,23 @@ object AvailableExpression {
     var iteration = 1
     do {
       var table = Seq(titlesTable)
-      // println(s"\n>> iteration: ${iteration}")
+      println(s"\n>> iteration: ${iteration}")
       
       val entryOld = entry.clone()
       val exitOld = exit.clone()
       for(label <- labels(program)) {
         entry(label) =
           if (label == initLabel(program.stmt))
-            bottom
+            Set.empty
           else {
             // U { exit(from) | (from, to) <- flow(program) and to == label}
             // we could have implemented this using foldl, though I hope this
             // solution here is easier to understand.
             var res = bottom
             for((from, to) <- flow(program) if to == label) {
-              if(res == bottom) res = exit(from)
-              else if (exit(from) != bottom && res != bottom) res = exit(from) intersect res
+              // if(res == bottom) res = exit(from)
+              // else if (exit(from) != bottom && res != bottom) res = exit(from) intersect res
+              res = exit(from) intersect res
             }
             res
           }
@@ -65,7 +67,7 @@ object AvailableExpression {
 
         table = table :+ Seq(label.toString,entry(label).mkString(" "),kills.mkString(" "),gens.mkString(" "),exit(label).mkString(" "))
       }
-      //println(UtilFormatTable.run(table))
+      println(UtilFormatTable.run(table))
       iteration += 1 
       fixed = (entryOld, exitOld) == (entry, exit)
     }
