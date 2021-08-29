@@ -17,6 +17,15 @@ object CFGBuilder {
    */
   def flow(program: WhileProgram): CFG = flow(program.stmt)
 
+  /**
+   * Builds the inverse control flow graph from a given While program.
+   *
+   * @param program a While program
+   *
+   * @return The control-flow graph of the While program
+   */
+  def flowInverse(program: WhileProgram): CFG = flow(program.stmt).map({ case (from, to) => (to, from)})
+
   /*
    * The "core" of the algorithm for building
    * control-flow graphs. Here we use pattern
@@ -35,5 +44,7 @@ object CFGBuilder {
         flow(s) union Set((label, initLabel(s))) union finalLabels(s).map(from => (from, label))
     }
   }
+
+  
 
 }
