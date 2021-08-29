@@ -38,7 +38,7 @@ object ReachingDefinition {
     var iteration = 1
     do {
       var table = Seq(titlesTable)
-      println(s"\n>> iteration: ${iteration}")
+      //println(s"\n>> iteration: ${iteration}")
       iteration += 1 
       
       val entryOld = entry.clone()
@@ -65,7 +65,7 @@ object ReachingDefinition {
 
         table = table :+ Seq(label.toString,entry(label).mkString(" "),kills.mkString(" "),gens.mkString(" "),exit(label).mkString(" "))
       }
-      println(UtilFormatTable.run(table))
+      //println(UtilFormatTable.run(table))
       fixed = (entryOld, exitOld) == (entry, exit)
     }
     while(! fixed)
