@@ -17,11 +17,11 @@ object LiveVariable {
 
   val undef = -1   // this is the equivalent to the undef label in the book (?)
 
-  val entry: mutable.HashMap[Int, Abstraction] = mutable.HashMap()
-  val exit: mutable.HashMap[Int, Abstraction] = mutable.HashMap()
-
   def execute(program: WhileProgram): (DS, DS) = {
     var fixed = false
+
+    val entry: mutable.HashMap[Int, Abstraction] = mutable.HashMap()
+    val exit: mutable.HashMap[Int, Abstraction] = mutable.HashMap()
 
     // writing entry and exits as functions would be a possible
     // solution. nonetheless, since one depends on each other,
