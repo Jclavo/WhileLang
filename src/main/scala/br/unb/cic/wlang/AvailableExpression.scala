@@ -40,7 +40,7 @@ object AvailableExpression {
     var iteration = 1
     do {
       var table = Seq(titlesTable)
-      // println(s"\n>> iteration: ${iteration}")
+      //println(s"\n>> iteration: ${iteration}")
       
       val entryOld = entry.clone()
       val exitOld = exit.clone()
